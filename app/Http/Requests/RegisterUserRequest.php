@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
-
-class RegisterUserRequest extends FormRequest
+use App\Http\Requests\BaseFormRequest;
+class RegisterUserRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {
@@ -20,15 +19,5 @@ class RegisterUserRequest extends FormRequest
             'email' => 'required|string|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'message' => 'Validation failed',
-                'errors' => $validator->errors(),
-            ], 400)
-        );
     }
 }
