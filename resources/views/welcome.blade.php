@@ -73,7 +73,6 @@
           <button type="button" class="flex items-center justify-center gap-2 rounded-xl border border-white/10 py-2 text-sm">🔵 Google</button>
           <button type="button" class="flex items-center justify-center gap-2 rounded-xl border border-white/10 py-2 text-sm">🔷 Facebook</button>
         </div>
-
       </form>
 
       <p class="mt-6 text-xs text-slate-400">Ao entrar você aceita os <a href="#" class="text-indigo-400">Termos</a> e a <a href="#" class="text-indigo-400">Política de Privacidade</a>.</p>
@@ -81,41 +80,54 @@
 
   </main>
 
-  <script>
-    document.getElementById('togglePwd').addEventListener('click', function(){
-      const password = document.getElementById('password');
-      if(password.type === 'password'){
-        password.type = 'text';
-        this.textContent = 'Ocultar';
-      } else {
-        password.type = 'password';
-        this.textContent = 'Mostrar';
-      }
-    });
-
-    function handleSubmit(e){
-      e.preventDefault();
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      const original = btn.textContent;
-      btn.textContent = 'Entrando...';
-
-      const email = document.getElementById('email');
-      const password = document.getElementById('password');
-      if(!email.checkValidity() || !password.checkValidity()){
-        alert('Preencha corretamente os campos.');
-        btn.disabled = false;
-        btn.textContent = original;
-        return;
-      }
-
-
-      setTimeout(()=>{
-        btn.disabled = false;
-        btn.textContent = original;
-        alert('Login simulado com sucesso!');
-      }, 900);
+<script>
+  document.getElementById('togglePwd').addEventListener('click', function(){
+    const password = document.getElementById('password');
+    if(password.type === 'password'){
+      password.type = 'text';
+      this.textContent = 'Ocultar';
+    } else {
+      password.type = 'password';
+      this.textContent = 'Mostrar';
     }
-  </script>
+  });
+
+  async function handleSubmit(e){
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = 'Entrando...';
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+      const response = await fetch('http://localhost:8080/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if(response.ok){
+        alert('✅ Login realizado com sucesso!');
+        console.log('Resposta da API:', data);
+      } else {
+        alert('❌ Erro: ' + (data.message || 'Login falhou'));
+      }
+    } catch(err){
+      console.error(err);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+    }
+  }
+</script>
+
 </body>
 </html>
