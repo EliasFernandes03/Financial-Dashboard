@@ -1,5 +1,6 @@
-import './bootstrap';
+import { createApp } from 'vue';
+import Dashboard from './components/Dashboard.vue';  // Caminho relativo correto
 
-document.addEventListener("DOMContentLoaded", () => {
-
-});
+const app = createApp({});
+app.component('dashboard', Dashboard);
+app.mount('#app');

@@ -112,20 +112,11 @@
         body: JSON.stringify({ email, password })
       });
 
-      const data = await response.json();
-
-      if(response.ok){
-        alert('✅ Login realizado com sucesso!');
-        console.log('Resposta da API:', data);
-      } else {
-        alert('❌ Erro: ' + (data.message || 'Login falhou'));
-      }
+      const data = await response.json();   
+      window.location.href="./dashboard"
     } catch(err){
       console.error(err);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = original;
-    }
+    } 
   }
 </script>
 
