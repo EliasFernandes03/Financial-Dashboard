@@ -11,22 +11,21 @@
             fetch('http://localhost:8080/api/dashboard/index/1')
                 .then(response => response.json())
                 .then(data => {
-
                     document.querySelector('.saldo-total').textContent = `R$ ${data.data.balance.toFixed(2)}`;
                     document.querySelector('.receitas-total').textContent = `R$ ${data.data.income.toFixed(2)}`;
                     document.querySelector('.despesas-total').textContent = `R$ ${data.data.expenses.toFixed(2)}`;
 
                     const categoryContainer = document.getElementById('gastos-categoria-container');
-                                categoryContainer.innerHTML = ''; 
-                                data.data.expensesByCategory.forEach(item => {
-                                    const div = document.createElement('div');
-                                    div.className = 'p-4 bg-white/5 rounded-lg flex justify-between items-center';
-                                    div.innerHTML = `
-                                        <span class="text-slate-200 font-medium">${item.category}</span>
-                                        <span class="text-red-400 font-bold">R$ ${parseFloat(item.total).toFixed(2)}</span>
-                                    `;
-                                    categoryContainer.appendChild(div);
-                                });
+                    categoryContainer.innerHTML = ''; 
+                    data.data.expensesByCategory.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'p-4 bg-white/5 rounded-lg flex justify-between items-center';
+                        div.innerHTML = `
+                            <span class="text-slate-200 font-medium">${item.category}</span>
+                            <span class="text-red-400 font-bold">R$ ${parseFloat(item.total).toFixed(2)}</span>
+                        `;
+                        categoryContainer.appendChild(div);
+                    });
 
                     const transactionsList = document.querySelector('.transacoes-list');
                     transactionsList.innerHTML = '';
@@ -41,21 +40,43 @@
                         `;
                         transactionsList.appendChild(li);
                     });
+
+                    // Modal toggle functionality
+                    const modal = document.getElementById('transaction-modal');
+                    const openModalBtn = document.getElementById('open-modal-btn');
+                    const closeModalBtn = document.getElementById('close-modal-btn');
+
+                    openModalBtn.addEventListener('click', () => {
+                        modal.classList.remove('hidden');
+                    });
+
+                    closeModalBtn.addEventListener('click', () => {
+                        modal.classList.add('hidden');
+                    });
+
+                    // Close modal when clicking outside
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            modal.classList.add('hidden');
+                        }
+                    });
                 })
                 .catch(error => console.error('Error fetching data:', error));
         });
     </script>
 </head>
 <body class="bg-gray-100">
-
 <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 p-6 font-sans text-slate-100">
-
     <nav class="glass bg-white/5 rounded-2xl shadow-xl p-4 flex justify-between items-center">
         <span class="font-bold text-xl tracking-wide">Finanças Pessoais</span>
-        <a
-           class="bg-indigo-500 hover:bg-indigo-600 px-4 py-2 rounded-xl transition duration-200 ease-in-out transform hover:scale-105 font-semibold">
-            Sair
-        </a>
+        <div class="flex items-center space-x-4">
+            <button id="open-modal-btn" class="bg-indigo-500 hover:bg-indigo-600 px-4 py-2 rounded-xl transition duration-200 ease-in-out transform hover:scale-105 font-semibold">
+                Nova Transação
+            </button>
+            <a class="bg-indigo-500 hover:bg-indigo-600 px-4 py-2 rounded-xl transition duration-200 ease-in-out transform hover:scale-105 font-semibold">
+                Sair
+            </a>
+        </div>
     </nav>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
@@ -63,12 +84,10 @@
             <h2 class="text-slate-300 font-semibold mb-2 text-lg">Saldo Total</h2>
             <p class="text-3xl font-bold text-emerald-400 saldo-total"></p>
         </div>
-
         <div class="glass bg-white/5 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
             <h2 class="text-slate-300 font-semibold mb-2 text-lg">Receitas</h2>
             <p class="text-3xl font-bold text-blue-400 receitas-total"></p>
         </div>
-
         <div class="glass bg-white/5 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
             <h2 class="text-slate-300 font-semibold mb-2 text-lg">Despesas</h2>
             <p class="text-3xl font-bold text-red-400 despesas-total"></p>
@@ -77,16 +96,52 @@
 
     <div class="glass bg-white/5 rounded-2xl shadow-xl p-6 mt-6 hover:shadow-2xl transition-shadow duration-300">
         <h2 class="text-slate-300 font-semibold mb-4 text-lg">Gastos por Categoria</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="gastos-categoria-container">
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="gastos-categoria-container"></div>
     </div>
 
     <div class="glass bg-white/5 rounded-2xl shadow-xl p-6 mt-6 hover:shadow-2xl transition-shadow duration-300">
-    <h2 class="text-slate-300 font-semibold mb-4 text-lg">Últimas Transações</h2>
-    <ul class="divide-y divide-white/10 transacoes-list">
-    </ul>
-</div>
-</div>
+        <h2 class="text-slate-300 font-semibold mb-4 text-lg">Últimas Transações</h2>
+        <ul class="divide-y divide-white/10 transacoes-list"></ul>
+    </div>
 
+    <!-- Modal -->
+    <div id="transaction-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden">
+        <div class="glass bg-slate-900/90 rounded-2xl shadow-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-slate-200 font-semibold text-xl">Nova Transação</h2>
+                <button id="close-modal-btn" class="text-slate-300 hover:text-slate-100">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form>
+                <div class="mb-4">
+                    <label class="block text-slate-300 font-medium mb-2" for="description">Descrição</label>
+                    <input type="text" id="description" class="w-full p-2 bg-white/5 rounded-lg text-slate-200 border border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Aluguel, Salário">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-slate-300 font-medium mb-2" for="amount">Valor</label>
+                    <input type="number" id="amount" step="0.01" class="w-full p-2 bg-white/5 rounded-lg text-slate-200 border border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="R$ 0.00">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-slate-300 font-medium mb-2" for="type">Tipo</label>
+                    <select id="type" class="w-full p-2 bg-white/5 rounded-lg text-slate-200 border border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="income" class="text-emerald-400">Receita</option>
+                        <option value="expense" class="text-red-400">Despesa</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-slate-300 font-medium mb-2" for="category">Categoria</label>
+                    <input type="text" id="category" class="w-full p-2 bg-white/5 rounded-lg text-slate-200 border border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ex: Moradia, Alimentação">
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" id="close-modal-btn" class="px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded-lg text-slate-200 font-semibold">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-slate-200 font-semibold">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>
