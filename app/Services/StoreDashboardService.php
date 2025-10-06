@@ -19,7 +19,7 @@ class StoreDashboardService
         return $this->dashboardRepository->getDashboardData($userId);
     }
 
-    public function storeTransaction(array $data)
+    public function storeTransaction(array $data): array
     {
         try {
             $transaction = $this->dashboardRepository->createTransaction($data);
