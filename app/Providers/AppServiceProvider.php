@@ -11,7 +11,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(
+      $this->app->bind(
         \App\Repositories\Contracts\IIndexTransactionRepository::class,
         \App\Repositories\Contracts\IndexTransactionRepository::class
     );
