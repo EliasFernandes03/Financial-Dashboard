@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Repositories\Contracts\ITransactionRepository;
+use App\Repositories\Contracts\IIndexTransactionRepository;
 
 class DashboardService
 {
     protected $transactionRepository;
 
-    public function __construct(ITransactionRepository $transactionRepository)
+    public function __construct(IIndexTransactionRepository $transactionRepository)
     {
         $this->transactionRepository = $transactionRepository;
     }

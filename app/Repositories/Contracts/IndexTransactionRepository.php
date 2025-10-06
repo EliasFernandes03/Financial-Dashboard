@@ -3,11 +3,11 @@
 namespace App\Repositories\Contracts;
 
 use App\Models\Transaction;
-use App\Repositories\Contracts\ITransactionRepository;
+use App\Repositories\Contracts\IIndexTransactionRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class TransactionRepository implements ITransactionRepository
+class IndexTransactionRepository implements IIndexTransactionRepository
 {
     protected $model;
 

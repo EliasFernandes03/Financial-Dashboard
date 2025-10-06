@@ -4,7 +4,7 @@ namespace App\Repositories\Contracts;
 
 use Illuminate\Support\Collection;
 
-interface ITransactionRepository
+interface IIndexTransactionRepository
 {
     public function getTotalBalance(int $userId): float;
     public function getTotalIncome(int $userId): float;
