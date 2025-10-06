@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Repositories\Contracts\IIndexTransactionRepository;
 
-class DashboardService
+class IndexDashboardService
 {
     protected $transactionRepository;
 
